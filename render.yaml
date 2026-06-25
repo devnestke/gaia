@@ -1,0 +1,47 @@
+# Render blueprint for GAIA — https://render.com/docs/blueprint-spec
+# Deploys two services: the Express+Socket.IO API (with a persistent disk for
+# SQLite) and the Vite frontend as a static site pointed at the API.
+
+services:
+  # ---- API server (Express + Socket.IO + SQLite) ----
+  - type: web
+    name: gaia-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build
+    # Run migrations against the mounted disk, then start.
+    startCommand: npx knex migrate:latest && npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22.17.0"
+      # SQLite lives on the persistent disk so votes survive restarts/deploys.
+      - key: DB_FILE
+        value: /var/data/dev.sqlite3
+    disk:
+      name: gaia-data
+      mountPath: /var/data
+      sizeGB: 1
+
+  # ---- Frontend (Vite static build) ----
+  - type: web
+    name: gaia-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: "22.17.0"
+      # Point the browser at the API service's public URL at build time.
+      - key: VITE_API_HOST
+        fromService:
+          name: gaia-server
+          type: web
+          property: host
+    # SPA: serve index.html for client-side routes.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

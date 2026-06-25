@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "description": "GAIA — crowd-curated music for live events",
   "license": "MIT",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/src/index.js",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "migrate": "knex migrate:latest",
     "reset-db": "rm -f dev.sqlite3 && knex migrate:latest && echo 'Database reset and migrations applied.'",
