@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Outfit:wght@300..800&display=swap");
+@import "tailwindcss";
+
+/*
+  GAIA — "luminous nightfall"
+  A room of people becoming one organism through music. Deep ink→violet
+  atmosphere, warm amber→magenta crowd-energy gradient (stage lights + warmth).
+  Songs glow brighter and rise as the crowd converges.
+*/
+
+@theme {
+  --color-ink: #0a0814;
+  --color-ink-2: #120f23;
+  --color-haze: #1c1733;
+  --color-mist: #2a2247;
+  --color-text: #f4f0ff;
+  --color-muted: #9b92c4;
+  --color-faint: #6a6293;
+
+  --color-amber: #ffb347;
+  --color-flame: #ff6b6b;
+  --color-magenta: #e84d8a;
+  --color-violet: #8b5cf6;
+  --color-cyan: #5ad6ff;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Outfit", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --energy: linear-gradient(110deg, #ffb347 0%, #ff6b6b 42%, #e84d8a 100%);
+  --energy-soft: linear-gradient(110deg, #ffb34733 0%, #e84d8a33 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Atmospheric backdrop: layered radial glows + fine grain, fixed to viewport */
+.gaia-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 50% at 18% 12%, #8b5cf633 0%, transparent 60%),
+    radial-gradient(55% 45% at 85% 8%, #e84d8a2b 0%, transparent 55%),
+    radial-gradient(70% 60% at 50% 110%, #ffb34722 0%, transparent 60%),
+    linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-2) 100%);
+}
+.gaia-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Utilities */
+.font-display { font-family: var(--font-display); }
+.gradient-text {
+  background: var(--energy);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.glass {
+  background: linear-gradient(180deg, #ffffff0d, #ffffff05);
+  border: 1px solid #ffffff12;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.energy-fill { background: var(--energy); }
+.energy-ring { box-shadow: 0 0 0 1px #ffffff10, 0 8px 40px -12px #e84d8a55; }
+
+/* The crowd-glow: brighter the more votes a song has */
+.crowd-glow {
+  box-shadow: 0 0 calc(var(--glow, 0) * 60px) -10px rgba(232, 77, 138, calc(var(--glow, 0) * 0.9)),
+    inset 0 0 0 1px rgba(255, 179, 71, calc(var(--glow, 0) * 0.5));
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise-in { animation: rise-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+
+@keyframes equalize {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+.eq-bar { transform-origin: bottom; animation: equalize 0.8s ease-in-out infinite; }
+
+::selection { background: #e84d8a55; }
