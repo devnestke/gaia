@@ -60,11 +60,11 @@ export default function Landing() {
             onChange={(e) => setCode(e.target.value)}
             placeholder="GAIA-0000"
             autoCapitalize="characters"
-            className="flex-1 bg-ink-2/60 border border-white/10 rounded-xl px-4 py-3 text-lg font-display tracking-wider outline-none focus:border-magenta/60 transition"
+            className="flex-1 min-w-0 bg-ink-2/60 border border-white/10 rounded-xl px-4 py-3 text-lg font-display tracking-wider outline-none focus:border-magenta/60 transition"
           />
           <button
             disabled={busy}
-            className="energy-fill text-ink font-semibold px-5 rounded-xl disabled:opacity-50 active:scale-95 transition"
+            className="shrink-0 energy-fill text-ink font-semibold px-5 rounded-xl disabled:opacity-50 active:scale-95 transition"
           >
             {busy ? "…" : "Join"}
           </button>

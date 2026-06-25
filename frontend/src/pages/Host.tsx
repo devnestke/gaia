@@ -74,13 +74,13 @@ function CreateForm({ onCreated }: { onCreated: (e: GaiaEvent) => void }) {
               type="button"
               key={m.id}
               onClick={() => setMode(m.id)}
-              className={`rounded-xl px-2 py-3 text-sm border transition text-left ${
+              className={`rounded-xl px-2.5 py-3 text-sm border transition text-left ${
                 mode === m.id
                   ? "energy-fill text-ink border-transparent"
                   : "border-white/10 text-muted hover:border-white/25"
               }`}
             >
-              <div className="font-semibold leading-tight">{m.label}</div>
+              <div className="font-semibold leading-tight break-words hyphens-auto">{m.label}</div>
               <div className={`text-[10px] mt-0.5 ${mode === m.id ? "text-ink/70" : "text-faint"}`}>
                 {m.hint}
               </div>
