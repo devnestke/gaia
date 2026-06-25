@@ -1,6 +1,12 @@
 # Render blueprint for GAIA — https://render.com/docs/blueprint-spec
-# Deploys two services: the Express+Socket.IO API (with a persistent disk for
-# SQLite) and the Vite frontend as a static site pointed at the API.
+# Deploys two services: the Express+Socket.IO API and the Vite frontend as a
+# static site pointed at the API.
+#
+# NOTE: Free tier does not allow persistent disks, so SQLite lives on the
+# container's ephemeral filesystem. Data persists while the server runs but is
+# reset on redeploy or after the free-tier idle sleep. For durable storage,
+# move gaia-server to a paid plan and add a `disk:` block (mountPath /var/data,
+# DB_FILE=/var/data/dev.sqlite3), or migrate to Postgres.
 
 services:
   # ---- API server (Express + Socket.IO + SQLite) ----
@@ -10,19 +16,12 @@ services:
     plan: free
     rootDir: server
     buildCommand: npm install && npm run build
-    # Run migrations against the mounted disk, then start.
+    # Migrate the (ephemeral) SQLite file, then start.
     startCommand: npx knex migrate:latest && npm start
     healthCheckPath: /healthz
     envVars:
       - key: NODE_VERSION
         value: "22.17.0"
-      # SQLite lives on the persistent disk so votes survive restarts/deploys.
-      - key: DB_FILE
-        value: /var/data/dev.sqlite3
-    disk:
-      name: gaia-data
-      mountPath: /var/data
-      sizeGB: 1
 
   # ---- Frontend (Vite static build) ----
   - type: web
